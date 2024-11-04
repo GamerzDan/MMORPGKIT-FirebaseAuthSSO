@@ -8,3 +8,4 @@
 *.so filter=lfs diff=lfs merge=lfs -text
 *.pom filter=lfs diff=lfs merge=lfs -text
 *.srcaar filter=lfs diff=lfs merge=lfs -text
+*.cs filter=lfs diff=lfs merge=lfs -text
