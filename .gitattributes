@@ -9,3 +9,7 @@
 *.pom filter=lfs diff=lfs merge=lfs -text
 *.srcaar filter=lfs diff=lfs merge=lfs -text
 *.cs filter=lfs diff=lfs merge=lfs -text
+*.md5 filter=lfs diff=lfs merge=lfs -text
+*.sha1 filter=lfs diff=lfs merge=lfs -text
+*.h filter=lfs diff=lfs merge=lfs -text
+*.mm filter=lfs diff=lfs merge=lfs -text
