@@ -19,52 +19,54 @@ namespace MultiplayerARPG.MMO
         [DevExtMethods("RegisterMessages")]
         protected void DevExtRegisterSteamAuthMessages()
         {
+#if UNITY_STANDALONE && UNITY_SERVER
             RegisterRequestToServer<RequestUserLoginMessage, ResponseFirebaseAuthSSOLoginMessage>(MMORequestTypes.RequestFirebaseAuthSSO_Login, HandleRequestFirebaseAuthSSOLogin);
             RegisterRequestToServer<RequestUserRegisterMessage, ResponseFirebaseAuthSSOLoginMessage>(MMORequestTypes.RequestFirebaseAuthSSO_Register, HandleRequestFirebaseAuthSSORegister);
+#endif
         }
+    }
 
-        public static partial class MMORequestTypes
-        {
-            public const ushort RequestFirebaseAuthSSO_Login = 5050;
-            public const ushort RequestFirebaseAuthSSO_Register = 5051;
-        }
+    public static partial class MMORequestTypes
+    {
+        public const ushort RequestFirebaseAuthSSO_Login = 5050;
+        public const ushort RequestFirebaseAuthSSO_Register = 5051;
+    }
 
+    /// <summary>
+    /// General Response handler for firebase, we pass string or jsonText as response in it
+    /// </summary>
+    public struct ResponseFirebaseAuthSSOLoginMessage : INetSerializable
+    {
+        public string response;
+        public UITextKeys message;
         /// <summary>
-        /// General Response handler for firebase, we pass string or jsonText as response in it
+        /// This is mmorpgkit's internal userid
         /// </summary>
-        public struct ResponseFirebaseAuthSSOLoginMessage : INetSerializable
+        public string userId;
+        public string accessToken;
+        public long unbanTime;
+        /// <summary>
+        /// This is the actual username or steamid in mmorgkit
+        /// </summary>
+        public string username;
+        public void Deserialize(NetDataReader reader)
         {
-            public string response;
-            public UITextKeys message;
-            /// <summary>
-            /// This is mmorpgkit's internal userid
-            /// </summary>
-            public string userId;
-            public string accessToken;
-            public long unbanTime;
-            /// <summary>
-            /// This is the actual username or steamid in mmorgkit
-            /// </summary>
-            public string username;
-            public void Deserialize(NetDataReader reader)
-            {
-                response = reader.GetString();
-                message = (UITextKeys)reader.GetPackedUShort();
-                userId = reader.GetString();
-                accessToken = reader.GetString();
-                unbanTime = reader.GetPackedLong();
-                username = reader.GetString();
-            }
+            response = reader.GetString();
+            message = (UITextKeys)reader.GetPackedUShort();
+            userId = reader.GetString();
+            accessToken = reader.GetString();
+            unbanTime = reader.GetPackedLong();
+            username = reader.GetString();
+        }
 
-            public void Serialize(NetDataWriter writer)
-            {
-                writer.Put(response);
-                writer.PutPackedUShort((ushort)message);
-                writer.Put(userId);
-                writer.Put(accessToken);
-                writer.PutPackedLong(unbanTime);
-                writer.Put(username);
-            }
+        public void Serialize(NetDataWriter writer)
+        {
+            writer.Put(response);
+            writer.PutPackedUShort((ushort)message);
+            writer.Put(userId);
+            writer.Put(accessToken);
+            writer.PutPackedLong(unbanTime);
+            writer.Put(username);
         }
     }
 
@@ -393,17 +395,17 @@ namespace MultiplayerARPG.MMO
 
     public partial class MMOClientInstance : MonoBehaviour
     {
-        public void RequestFirebaseAuthSSOLogin(string steamid, string ticket, ResponseDelegate<CentralNetworkManager.ResponseFirebaseAuthSSOLoginMessage> callback)
+        public void RequestFirebaseAuthSSOLogin(string steamid, string ticket, ResponseDelegate<ResponseFirebaseAuthSSOLoginMessage> callback)
         {
             //centralNetworkManager.RequestSteamLogin(steamid, ticket, callback);
             CentralNetworkManager.RequestFirebaseAuthSSOLogin(steamid, ticket, (responseHandler, responseCode, response) => OnRequestFirebaseAuthSSOLogin(responseHandler, responseCode, response, callback).Forget());
         }
-        public void RequestFirebaseAuthSSORegister(string email, string password, ResponseDelegate<CentralNetworkManager.ResponseFirebaseAuthSSOLoginMessage> callback)
+        public void RequestFirebaseAuthSSORegister(string email, string password, ResponseDelegate<ResponseFirebaseAuthSSOLoginMessage> callback)
         {
             centralNetworkManager.RequestFirebaseAuthSSORegister(email, password, callback);
         }
 
-        private async UniTaskVoid OnRequestFirebaseAuthSSOLogin(ResponseHandlerData responseHandler, AckResponseCode responseCode, CentralNetworkManager.ResponseFirebaseAuthSSOLoginMessage response, ResponseDelegate<CentralNetworkManager.ResponseFirebaseAuthSSOLoginMessage> callback)
+        private async UniTaskVoid OnRequestFirebaseAuthSSOLogin(ResponseHandlerData responseHandler, AckResponseCode responseCode, ResponseFirebaseAuthSSOLoginMessage response, ResponseDelegate<ResponseFirebaseAuthSSOLoginMessage> callback)
         {
             await UniTask.Yield();
             Debug.Log("OnRequestFirebaseAuthSSOLogin");

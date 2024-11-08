@@ -77,7 +77,7 @@ namespace MultiplayerARPG.MMO
 #endif
         }
 
-        public void OnFirebaseAuthSSOLogin(ResponseHandlerData responseHandler, AckResponseCode responseCode, CentralNetworkManager.ResponseFirebaseAuthSSOLoginMessage response)
+        public void OnFirebaseAuthSSOLogin(ResponseHandlerData responseHandler, AckResponseCode responseCode, ResponseFirebaseAuthSSOLoginMessage response)
         {
             LoggingIn = false;
             Debug.Log(responseCode);
