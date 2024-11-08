@@ -19,11 +19,9 @@ namespace MultiplayerARPG.MMO
         [DevExtMethods("RegisterMessages")]
         protected void DevExtRegisterFirebaseAuthSSOMessages()
         {
-#if UNITY_STANDALONE || UNITY_SERVER //|| UNITY_EDITOR
             Debug.Log("DevExt RegisterMessages FirebaseAuthSSO + " + MMORequestTypes.RequestFirebaseAuthSSO_Login);
             RegisterRequestToServer<RequestUserLoginMessage, ResponseFirebaseAuthSSOLoginMessage>(MMORequestTypes.RequestFirebaseAuthSSO_Login, HandleRequestFirebaseAuthSSOLogin);
             RegisterRequestToServer<RequestUserRegisterMessage, ResponseFirebaseAuthSSOLoginMessage>(MMORequestTypes.RequestFirebaseAuthSSO_Register, HandleRequestFirebaseAuthSSORegister);
-#endif
         }
     }
 
