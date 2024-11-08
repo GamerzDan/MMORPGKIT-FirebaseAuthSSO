@@ -5,11 +5,11 @@ using LiteNetLibManager;
 using LiteNetLib.Utils;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Networking;
-using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using System;
 #if UNITY_STANDALONE || UNITY_EDITOR
-using Firebase.Auth;;
+using Firebase.Auth;
 #endif
 
 namespace MultiplayerARPG.MMO
@@ -25,8 +25,8 @@ namespace MultiplayerARPG.MMO
 
         public static partial class MMORequestTypes
         {
-            public const ushort RequestFirebaseAuthSSO_Login = 5012;
-            public const ushort RequestFirebaseAuthSSO_Register = 5013;
+            public const ushort RequestFirebaseAuthSSO_Login = 5050;
+            public const ushort RequestFirebaseAuthSSO_Register = 5051;
         }
 
         /// <summary>
