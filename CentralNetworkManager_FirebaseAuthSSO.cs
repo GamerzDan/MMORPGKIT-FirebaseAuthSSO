@@ -17,10 +17,10 @@ namespace MultiplayerARPG.MMO
     public partial class CentralNetworkManager : LiteNetLibManager.LiteNetLibManager
     {
         [DevExtMethods("RegisterMessages")]
-        protected void DevExtRegisterSteamAuthMessages()
+        protected void DevExtRegisterFirebaseAuthSSOMessages()
         {
-#if UNITY_STANDALONE || UNITY_SERVER
-            Debug.Log("DevExt RegisterMessages FirebaseAuthSSO");
+#if UNITY_STANDALONE || UNITY_SERVER || UNITY_EDITOR
+            Debug.Log("DevExt RegisterMessages FirebaseAuthSSO + " + MMORequestTypes.RequestFirebaseAuthSSO_Login);
             RegisterRequestToServer<RequestUserLoginMessage, ResponseFirebaseAuthSSOLoginMessage>(MMORequestTypes.RequestFirebaseAuthSSO_Login, HandleRequestFirebaseAuthSSOLogin);
             RegisterRequestToServer<RequestUserRegisterMessage, ResponseFirebaseAuthSSOLoginMessage>(MMORequestTypes.RequestFirebaseAuthSSO_Register, HandleRequestFirebaseAuthSSORegister);
 #endif
