@@ -11,8 +11,8 @@ using Firebase.Auth;
 using Cysharp.Threading.Tasks;
 #if UNITY_EDITOR
 using UnityEditor;
-using System;
 #endif
+using System;
 
 namespace MultiplayerARPG.MMO
 {
@@ -64,7 +64,7 @@ namespace MultiplayerARPG.MMO
                 {
                 //task is the GoogleSignInUser object
                 Debug.Log("Google SignIn Done: " + task.IdToken + " " + task.UserId + " " + task.Email);
-                    MMOClientInstance.Singleton.RequestFirebaseAuthSSOLogin(task.IdToken, "", OnFirebaseAuthSSOLogin);
+                MMOClientInstance.Singleton.RequestFirebaseAuthSSOLogin(task.IdToken, "", OnFirebaseAuthSSOLogin);
                 });
             } catch (Exception e)
             {

@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 using System.Text;
 using System.Text.RegularExpressions;
 using System;
-#if UNITY_STANDALONE || UNITY_EDITOR
+#if UNITY_SERVER || UNITY_EDITOR
 using Firebase.Auth;
 #endif
 
@@ -19,7 +19,8 @@ namespace MultiplayerARPG.MMO
         [DevExtMethods("RegisterMessages")]
         protected void DevExtRegisterSteamAuthMessages()
         {
-#if UNITY_STANDALONE && UNITY_SERVER
+#if UNITY_STANDALONE || UNITY_SERVER
+            Debug.Log("DevExt RegisterMessages FirebaseAuthSSO");
             RegisterRequestToServer<RequestUserLoginMessage, ResponseFirebaseAuthSSOLoginMessage>(MMORequestTypes.RequestFirebaseAuthSSO_Login, HandleRequestFirebaseAuthSSOLogin);
             RegisterRequestToServer<RequestUserRegisterMessage, ResponseFirebaseAuthSSOLoginMessage>(MMORequestTypes.RequestFirebaseAuthSSO_Register, HandleRequestFirebaseAuthSSORegister);
 #endif
@@ -88,6 +89,7 @@ namespace MultiplayerARPG.MMO
         }
         public bool RequestFirebaseAuthSSOLogin(string username, string password, ResponseDelegate<ResponseFirebaseAuthSSOLoginMessage> callback)
         {
+            Debug.Log("CentralNetworkManager.RequestFirebaseAuthSSOLogin()");
             return ClientSendRequest(MMORequestTypes.RequestFirebaseAuthSSO_Login, new RequestUserLoginMessage()
             {
                 username = username,
@@ -128,6 +130,7 @@ namespace MultiplayerARPG.MMO
         /// <param name="result"></param>
         public void validateFirebaseAuthSSO(string idtoken, string password, RequestProceedResultDelegate<ResponseFirebaseAuthSSOLoginMessage> result, RequestHandlerData requestHandler)
         {
+#if UNITY_EDITOR || UNITY_SERVER
             if (auth == null)
             {
                 Debug.Log("Firebase Auth Init");
@@ -175,6 +178,7 @@ namespace MultiplayerARPG.MMO
                         response = "validateFirebaseAuthSSO Error: " + e.Message,
                     });
             };
+#endif
         }
 
         protected async UniTaskVoid HandleFirebaseAuthSSOLogin(string userid,
