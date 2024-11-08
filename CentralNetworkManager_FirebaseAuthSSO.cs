@@ -29,8 +29,8 @@ namespace MultiplayerARPG.MMO
 
     public static partial class MMORequestTypes
     {
-        public const ushort RequestFirebaseAuthSSO_Login = 5050;
-        public const ushort RequestFirebaseAuthSSO_Register = 5051;
+        public const ushort RequestFirebaseAuthSSO_Login = 3333;
+        public const ushort RequestFirebaseAuthSSO_Register = 3334;
     }
 
     /// <summary>
