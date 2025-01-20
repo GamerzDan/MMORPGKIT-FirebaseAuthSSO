@@ -64,12 +64,16 @@ namespace MultiplayerARPG.MMO
                 {
                 //task is the GoogleSignInUser object
                 Debug.Log("Google SignIn Done: " + task.IdToken + " " + task.UserId + " " + task.Email);
+				
+				//This lets you select the google account on every sign in attempt
+				GoogleSignIn.DefaultInstance.SignOut();
                 MMOClientInstance.Singleton.RequestFirebaseAuthSSOLogin(task.IdToken, "", OnFirebaseAuthSSOLogin);
                 });
             } catch (Exception e)
             {
                 Debug.Log("mmoLoginSSO_Google exception " + e.Message + " - " + e.StackTrace);
                 uiSceneGlobal.ShowMessageDialog("SSO Login Error", e.Message);
+				GoogleSignIn.DefaultInstance.SignOut();
                 LoggingIn = false;
             }
 #else 
