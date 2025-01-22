@@ -67,12 +67,12 @@ namespace MultiplayerARPG.MMO
             UniTask<GoogleSignInUser> signIn = GoogleSignIn.DefaultInstance.SignIn().AsUniTask();
             await signIn.ContinueWith(task =>
             {
-            //task is the GoogleSignInUser object
-            Debug.Log("Google SignIn Done: " + task.IdToken + " " + task.UserId + " " + task.Email);
+                //task is the GoogleSignInUser object
+                Debug.Log("Google SignIn Done: " + task.IdToken + " " + task.UserId + " " + task.Email);
 				
-			//This lets you select the google account on every sign in attempt
-			GoogleSignIn.DefaultInstance.SignOut();
-            MMOClientInstance.Singleton.RequestFirebaseAuthSSOLogin(task.IdToken, "", OnFirebaseAuthSSOLogin);
+			    //This lets you select the google account on every sign in attempt
+			    GoogleSignIn.DefaultInstance.SignOut();
+                MMOClientInstance.Singleton.RequestFirebaseAuthSSOLogin(task.IdToken, "", OnFirebaseAuthSSOLogin);
             });
         } catch (Exception e)
         {
@@ -139,14 +139,13 @@ namespace MultiplayerARPG.MMO
                     Debug.LogFormat("User signed in successfully: {0} ({1})",user.DisplayName, user.UserId);
                     string token = user.TokenAsync(false).Result;
                     Debug.Log(token);
-                    //MMOClientInstance.Singleton.RequestFirebaseAuthSSOLogin(task.IdToken, "", OnFirebaseAuthSSOLogin);
+                    MMOClientInstance.Singleton.RequestFirebaseAuthSSOLogin(token, "apple.com", OnFirebaseAuthSSOLogin);
                 });
             }
             catch (Exception e)
             {
-                Debug.Log("mmoLoginSSO_Google exception " + e.Message + " - " + e.StackTrace);
+                Debug.Log("mmoLoginSSO_Apple exception " + e.Message + " - " + e.StackTrace);
                 uiSceneGlobal.ShowMessageDialog("SSO Login Error", e.Message);
-                GoogleSignIn.DefaultInstance.SignOut();
                 LoggingIn = false;
             }
 #else

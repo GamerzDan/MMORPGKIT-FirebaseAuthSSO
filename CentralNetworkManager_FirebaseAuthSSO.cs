@@ -137,7 +137,15 @@ namespace MultiplayerARPG.MMO
             }
             try
             {
-                Credential credential = Firebase.Auth.GoogleAuthProvider.GetCredential(idtoken, null);
+                Credential credential;
+                if (password == "apple.com")
+                {
+                    credential = Firebase.Auth.OAuthProvider.GetCredential("apple.com", idtoken, "0", null);
+                }
+                else
+                {
+                    credential = Firebase.Auth.GoogleAuthProvider.GetCredential(idtoken, null);
+                }
                 auth.SignInWithCredentialAsync(credential).AsUniTask().ContinueWith(authTask =>
                 {
                     FirebaseUser firebaseUser = authTask;
