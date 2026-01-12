@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using Firebase.Extensions;
 using UnityEngine.ResourceManagement.ResourceProviders;
+using static Panda.BTLTokenizer;
 
 namespace MultiplayerARPG.MMO
 {
@@ -137,9 +138,8 @@ namespace MultiplayerARPG.MMO
                     Firebase.Auth.AuthResult authResult = task.Result;
                     Firebase.Auth.FirebaseUser user = authResult.User;
                     Debug.LogFormat("User signed in successfully: {0} ({1})",user.DisplayName, user.UserId);
-                    string token = user.TokenAsync(false).Result;
-                    Debug.Log(token);
-                    MMOClientInstance.Singleton.RequestFirebaseAuthSSOLogin(token, "apple.com", OnFirebaseAuthSSOLogin);
+                    MMOClientInstance.Singleton.RequestFirebaseAuthSSOLogin(user.UserId, "apple.com", OnFirebaseAuthSSOLogin);
+                    Debug.Log("mmoLoginSSO_Apple waiting for server call return now");
                 });
             }
             catch (Exception e)

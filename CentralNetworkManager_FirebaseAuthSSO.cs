@@ -140,42 +140,43 @@ namespace MultiplayerARPG.MMO
                 Credential credential;
                 if (password == "apple.com")
                 {
-                    credential = Firebase.Auth.OAuthProvider.GetCredential("apple.com", idtoken, "0", null);
+                    //credential = Firebase.Auth.OAuthProvider.GetCredential("apple.com", idtoken, "0", null);
+                    HandleFirebaseAuthSSOLogin(idtoken, result, requestHandler);
                 }
                 else
                 {
                     credential = Firebase.Auth.GoogleAuthProvider.GetCredential(idtoken, null);
-                }
-                auth.SignInWithCredentialAsync(credential).AsUniTask().ContinueWith(authTask =>
-                {
-                    FirebaseUser firebaseUser = authTask;
-                    //Check if passed steamid is same as ticket steamid
-                    if (authTask == null || firebaseUser == null)
+                    auth.SignInWithCredentialAsync(credential).AsUniTask().ContinueWith(authTask =>
                     {
-                        //TODO: Ban if steamids donot match
-                        //This means the steamid client sent is not same as AuthTicket steamid and there is probably a hack attempt
-                        //We can use here to ban this user
-                        result.Invoke(AckResponseCode.Error,
-                            new ResponseFirebaseAuthSSOLoginMessage()
-                            {
-                                response = "FirebaseSSO Validation Failed, null response",
-                            });
-                    }
-                    else
-                    {
-                        Debug.Log("firebaseSSO Validate Response: " + firebaseUser.UserId);
-                        /*
-                        result.Invoke(AckResponseCode.Success,
-                        new ResponseSteamAuthLoginMessage()
+                        FirebaseUser firebaseUser = authTask;
+                        //Check if passed steamid is same as ticket steamid
+                        if (authTask == null || firebaseUser == null)
                         {
-                            response = res.Text,
-                        }); */
+                            //TODO: Ban if steamids donot match
+                            //This means the steamid client sent is not same as AuthTicket steamid and there is probably a hack attempt
+                            //We can use here to ban this user
+                            result.Invoke(AckResponseCode.Error,
+                                new ResponseFirebaseAuthSSOLoginMessage()
+                                {
+                                    response = "FirebaseSSO Validation Failed, null response",
+                                });
+                        }
+                        else
+                        {
+                            Debug.Log("firebaseSSO Validate Response: " + firebaseUser.UserId);
+                            /*
+                            result.Invoke(AckResponseCode.Success,
+                            new ResponseSteamAuthLoginMessage()
+                            {
+                                response = res.Text,
+                            }); */
 
-                        //Let's try to login the user from server
-                        HandleFirebaseAuthSSOLogin(firebaseUser.UserId, result, requestHandler);
-                    }
+                            //Let's try to login the user from server
+                            HandleFirebaseAuthSSOLogin(firebaseUser.UserId, result, requestHandler);
+                        }
 
-                }).Forget();
+                    }).Forget();
+                }
             } catch(Exception e)
             {
                 Debug.Log("validateFirebaseAuthSSO Error: " + e.Message + " - " + e.StackTrace);
